@@ -1,17 +1,28 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service 
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from  selenium.webdriver.common.by import By
+import time
 
-PATH = r"C:\Program Files (x86)\chromedriver.exe"
+Link = "https://quotes.toscrape.com/"
 
-options = webdriver.ChromeOptions() 
-options.add_experimental_option("detach", True)
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
+service = Service(executable_path="chromedriver.exe")
+driver = webdriver.Chrome(service=service)
 
-driver = webdriver.Chrome(
-    service= Service(PATH), 
-    options=options)
+driver.get(Link)
 
-driver.get("https://quotes.toscrape.com/")
-print(driver.title)
+
+
+try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "col-md-4"))
+    )
+finally:
+    input_element = driver.find_element(By.CLASS_NAME, "col-md-4").click() #this is for input
+
+
+time.sleep(10)
+
 driver.quit()
